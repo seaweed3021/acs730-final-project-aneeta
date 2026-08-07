@@ -36,3 +36,13 @@ module "launch_template" {
   bucket_name = module.storage.bucket_name
   image_key   = module.storage.image_key
 }
+
+module "alb" {
+  source = "../../modules/alb"
+
+  env_name          = "dev"
+  name_prefix       = "Aneeta"
+  vpc_id            = module.networking.vpc_id
+  public_subnet_ids = module.networking.public_subnet_ids
+  alb_sg_id         = module.security_group.alb_sg_id
+}
