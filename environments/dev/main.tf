@@ -46,3 +46,18 @@ module "alb" {
   public_subnet_ids = module.networking.public_subnet_ids
   alb_sg_id         = module.security_group.alb_sg_id
 }
+
+module "asg" {
+  source = "../../modules/asg"
+
+  env_name                 = "dev"
+  name_prefix              = "Aneeta"
+  private_subnet_ids       = module.networking.private_subnet_ids
+  launch_template_id       = module.launch_template.launch_template_id
+  launch_template_version  = module.launch_template.latest_version
+  target_group_arn         = module.alb.target_group_arn
+
+  min_size         = 2
+  max_size         = 4
+  desired_capacity = 2
+}
