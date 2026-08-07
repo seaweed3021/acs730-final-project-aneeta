@@ -28,6 +28,12 @@ resource "aws_launch_template" "web" {
 
   vpc_security_group_ids = [var.web_sg_id]
 
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+
   user_data = base64encode(templatefile("${path.module}/../../scripts/user-data.sh.tpl", {
     bucket_name = var.bucket_name
     image_key   = var.image_key

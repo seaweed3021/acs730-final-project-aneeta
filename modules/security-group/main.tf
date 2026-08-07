@@ -1,3 +1,4 @@
+# trivy:ignore:AVD-AWS-0104 Unrestricted egress is standard practice here - instances need outbound access for OS updates and S3 access
 resource "aws_security_group" "alb" {
   name        = "${var.name_prefix}-${var.env_name}-AlbSg"
   description = "Allow HTTP from the internet to the ALB"
@@ -24,6 +25,7 @@ resource "aws_security_group" "alb" {
   }
 }
 
+# trivy:ignore:AVD-AWS-0104 Unrestricted egress is standard practice here - instances need outbound access for OS updates and S3 access
 resource "aws_security_group" "web" {
   name        = "${var.name_prefix}-${var.env_name}-WebSg"
   description = "Allow HTTP only from the ALB security group"

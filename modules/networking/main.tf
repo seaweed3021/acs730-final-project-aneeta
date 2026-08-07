@@ -19,7 +19,7 @@ resource "aws_internet_gateway" "this" {
     Environment = var.env_name
   }
 }
-
+# trivy:ignore:AVD-AWS-0164 Public IP is required here - these subnets host the internet-facing ALB
 resource "aws_subnet" "public" {
   count                   = length(var.public_subnet_cidrs)
   vpc_id                  = aws_vpc.this.id
