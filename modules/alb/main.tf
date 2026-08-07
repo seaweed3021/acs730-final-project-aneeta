@@ -1,9 +1,11 @@
+# trivy:ignore:AVD-AWS-0053 Public-facing ALB is intentional - this is the internet entry point for the web app
 resource "aws_lb" "web" {
-  name               = "${lower(var.name_prefix)}-${var.env_name}-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [var.alb_sg_id]
-  subnets            = var.public_subnet_ids
+  name                     = "${lower(var.name_prefix)}-${var.env_name}-alb"
+  internal                 = false
+  load_balancer_type       = "application"
+  security_groups          = [var.alb_sg_id]
+  subnets                  = var.public_subnet_ids
+  drop_invalid_header_fields = true
 
   tags = {
     Name        = "${var.name_prefix}-${var.env_name}-Alb"
@@ -31,6 +33,7 @@ resource "aws_lb_target_group" "web" {
   }
 }
 
+# trivy:ignore:AVD-AWS-0054 HTTPS requires an ACM certificate and a registered domain, which is out of scope for this AWS Academy Learner Lab assignment
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.web.arn
   port              = 80
