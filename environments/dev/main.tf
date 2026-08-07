@@ -18,3 +18,21 @@ module "security_group" {
   name_prefix = "Aneeta"
   vpc_id      = module.networking.vpc_id
 }
+
+module "storage" {
+  source = "../../modules/storage"
+
+  env_name        = "dev"
+  name_prefix     = "Aneeta"
+  image_file_path = "${path.module}/../../assets/site-image.webp"
+}
+
+module "launch_template" {
+  source = "../../modules/launch-template"
+
+  env_name    = "dev"
+  name_prefix = "Aneeta"
+  web_sg_id   = module.security_group.web_sg_id
+  bucket_name = module.storage.bucket_name
+  image_key   = module.storage.image_key
+}
