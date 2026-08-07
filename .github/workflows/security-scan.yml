@@ -1,0 +1,40 @@
+name: Terraform Security Scan
+
+on:
+  push:
+    branches:
+      - staging
+  pull_request:
+    branches:
+      - prod
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run tflint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: Initialize tflint
+        run: tflint --init
+
+      - name: Run tflint on all modules and environments
+        run: |
+          for dir in modules/*/ environments/*/; do
+            echo "Linting $dir"
+            (cd "$dir" && tflint) || true
+          done
+
+      - name: Run Trivy vulnerability/misconfig scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
