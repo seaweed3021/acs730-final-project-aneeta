@@ -10,3 +10,11 @@ module "networking" {
 
   azs = ["us-east-1a", "us-east-1b"]
 }
+
+module "security_group" {
+  source = "../../modules/security-group"
+
+  env_name    = "dev"
+  name_prefix = "Aneeta"
+  vpc_id      = module.networking.vpc_id
+}
